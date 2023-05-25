@@ -1,8 +1,7 @@
 pipeline {
   agent {
     docker {
-      image 'eclipse-temurin:17-jdk-alpine'
-      registryUrl 'https://hub.docker.com/'
+      image 'maven:3.9.0-eclipse-temurin-11'
     }
 
   }
