@@ -1,27 +1,33 @@
 pipeline {
-  agent any
+  agent {
+    docker {
+      image 'eclipse-temurin:17-jdk-alpine'
+    }
+
+  }
   stages {
     stage('build') {
       steps {
-        build 'build_job'
+        sh '''./mvnw compile
+      -Dhttps.protocols=TLSv1.2
+      -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository
+      -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN
+      -Dorg.slf4j.simpleLogger.showDateTime=true
+      -Djava.awt.headless=true
+      --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true
+'''
       }
     }
 
     stage('test') {
       steps {
-        build 'code_quality_job'
-      }
-    }
-
-    stage('code quality') {
-      steps {
-        build 'code_quality_job'
-      }
-    }
-
-    stage('realese') {
-      steps {
-        build 'release_job'
+        sh '''./mvnw test
+      -Dhttps.protocols=TLSv1.2
+      -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository
+      -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN
+      -Dorg.slf4j.simpleLogger.showDateTime=true
+      -Djava.awt.headless=true
+      --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true'''
       }
     }
 
