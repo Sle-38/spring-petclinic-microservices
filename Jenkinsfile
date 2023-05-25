@@ -1,5 +1,10 @@
 pipeline {
-  agent any
+  agent {
+    docker {
+      image 'eclipse-temurin:17-jdk-alpine'
+    }
+
+  }
   stages {
     stage('build') {
       steps {
