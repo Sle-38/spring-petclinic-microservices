@@ -18,25 +18,26 @@ pipeline {
       }
     }
 
-	stage('build && SonarQube analysis') {
-	  steps {
-		withSonarQubeEnv('My SonarQube Server') {
-		  // Optionally use a Maven environment you've configured already
-		  withMaven(maven:'Maven 3.5') {
-			sh 'mvn clean package sonar:sonar'
-		  }
-		}
-	  }
-	}
+    stage('build & SonarQube analysis') {
+      steps {
+        withSonarQubeEnv(installationName: 'My SonarQube Server', credentialsId: '153f2e12-8143-4a1b-a37b-d6356301aa5f') {
+          withMaven(maven: 'Maven 3.5') {
+            sh 'mvn clean package sonar:sonar'
+          }
 
-	stage("Quality Gate") {
-	  steps {
-		timeout(time: 1, unit: 'HOURS') {
-		  // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
-		  // true = set pipeline to UNSTABLE, false = don't
-			waitForQualityGate abortPipeline: true
-		}
-	  }
-	}
+        }
+
+      }
+    }
+
+    stage('Quality Gate') {
+      steps {
+        timeout(time: 1, unit: 'HOURS') {
+          waitForQualityGate true
+        }
+
+      }
+    }
+
   }
 }
