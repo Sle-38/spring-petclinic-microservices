@@ -20,7 +20,7 @@ pipeline {
 
     stage('build & SonarQube analysis') {
       steps {
-        withSonarQubeEnv(installationName: 'My SonarQube Server', credentialsId: '153f2e12-8143-4a1b-a37b-d6356301aa5f') {
+        withSonarQubeEnv(installationName: 'sq1', credentialsId: '153f2e12-8143-4a1b-a37b-d6356301aa5f') {
           withMaven(maven: 'Maven 3.5') {
             sh 'mvn clean package sonar:sonar'
           }
